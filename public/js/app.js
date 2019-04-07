@@ -1817,6 +1817,118 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LazyImage.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LazyImage.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var lozad__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lozad */ "./node_modules/lozad/dist/lozad.min.js");
+/* harmony import */ var lozad__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lozad__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'LazyImage',
+  props: {
+    backgroundColor: {
+      type: String,
+      "default": 'transparent'
+    },
+    height: {
+      type: Number,
+      "default": null
+    },
+    lazySrc: {
+      type: String,
+      "default": null
+    },
+    lazySrcset: {
+      type: String,
+      "default": null
+    },
+    width: {
+      type: Number,
+      "default": null
+    }
+  },
+  data: function data() {
+    return {
+      loading: true
+    };
+  },
+  computed: {
+    aspectRatio: function aspectRatio() {
+      // Calculate the aspect ratio of the image
+      // if the width and the height are given.
+      if (!this.width || !this.height) return null;
+      return this.height / this.width * 100;
+    },
+    style: function style() {
+      // The background color is used as a
+      // placeholder while loading the image.
+      // You can use the dominant color of the
+      // image to improve perceived performance.
+      // See: https://manu.ninja/dominant-colors-for-lazy-loading-images/
+      var style = {
+        backgroundColor: this.backgroundColor
+      };
+      if (this.width) style.width = "".concat(this.width, "px"); // If the image is still loading and an
+      // aspect ratio could be calculated, we
+      // apply the calculated aspect ratio by
+      // using padding top.
+
+      var applyAspectRatio = this.loading && this.aspectRatio;
+
+      if (applyAspectRatio) {
+        // Prevent flash of unstyled image
+        // after the image is loaded.
+        style.height = 0; // Scale the image container according
+        // to the aspect ratio.
+
+        style.paddingTop = "".concat(this.aspectRatio, "%");
+      }
+
+      return style;
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    // As soon as the <img> element triggers
+    // the `load` event, the loading state is
+    // set to `false`, which removes the apsect
+    // ratio we've applied earlier.
+    var setLoadingState = function setLoadingState() {
+      _this.loading = false;
+    };
+
+    this.$el.addEventListener('load', setLoadingState); // We remove the event listener as soon as
+    // the component is destroyed to prevent
+    // potential memory leaks.
+
+    this.$once('hook:destroyed', function () {
+      _this.$el.removeEventListener('load', setLoadingState);
+    }); // We initialize Lozad.js on the root
+    // element of our component.
+
+    var observer = lozad__WEBPACK_IMPORTED_MODULE_0___default()(this.$el);
+    observer.observe();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Navigation.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Navigation.vue?vue&type=script&lang=js& ***!
@@ -1891,31 +2003,60 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     pokemon: Array
   },
   data: function data() {
     return {
-      pokemonData: {}
+      pokemonData: {},
+      pokedexSearch: ''
     };
+  },
+  computed: {
+    filteredPokemon: function filteredPokemon() {
+      var _this = this;
+
+      if (this.pokemon) {
+        return this.pokemon.filter(function (pokemon) {
+          return pokemon.name.includes(_this.pokedexSearch.toLowerCase());
+        });
+      }
+    }
   },
   methods: {
     setPokemonData: function setPokemonData(pokemon) {
-      if (pokemon.generation != null) {
-        this.pokemonData = pokemon;
-      } else {
+      this.pokemonData = pokemon;
+
+      if (pokemon.generation == null) {
         this.getPokemonData(pokemon.pokemon_id);
       }
     },
     getPokemonData: function getPokemonData(id) {
-      var _this = this;
+      var _this2 = this;
 
       axios.get("/api/pokemon/".concat(id)).then(function (res) {
-        _this.pokemonData = res.data;
+        _this2.pokemonData = res.data;
       })["catch"](function (error) {
         return console.error(error);
       });
+    },
+    formatGeneration: function formatGeneration(string) {
+      return string.split('generation-')[1];
     }
   }
 });
@@ -6537,6 +6678,25 @@ exports.push([module.i, ".home {\n  display: flex;\n  align-items: center;\n  ju
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LazyImage.vue?vue&type=style&index=0&lang=scss&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LazyImage.vue?vue&type=style&index=0&lang=scss& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".image {\n  max-width: 100%;\n  max-height: 100%;\n  width: auto;\n  height: auto;\n  vertical-align: middle;\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Navigation.vue?vue&type=style&index=0&lang=scss&":
 /*!**********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Navigation.vue?vue&type=style&index=0&lang=scss& ***!
@@ -6568,7 +6728,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".pokedex {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  background: tomato;\n  color: #FFF;\n}\n.pokedex .pokemon-list {\n  height: 75vh;\n  display: flex;\n  background: rgba(0, 0, 0, 0.5);\n}\n.pokedex .pokemon-list > ul {\n  height: 100%;\n  overflow-y: scroll;\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  border-radius: 4px;\n}\n.pokedex .pokemon-list > ul li {\n  padding: 0 1em;\n}\n.pokedex .pokemon-list > ul li:hover {\n  background: rgba(0, 0, 0, 0.25);\n  cursor: pointer;\n}\n.pokedex .pokemon-list > ul li:before {\n  width: 100%;\n  height: 1px;\n  background: rgba(255, 255, 255, 0.5);\n  content: \"\";\n  display: block;\n  margin-bottom: 0.25em;\n}\n.pokedex .pokemon-list > ul li:first-child {\n  padding-top: 0.25em;\n}\n.pokedex .pokemon-list > ul li:first-child:before {\n  content: none;\n}\n.pokedex .pokemon-list > ul li div {\n  display: flex;\n  padding: 0.25em 0;\n  align-items: center;\n}\n.pokedex .pokemon-list > ul li span:first-child {\n  width: 4em;\n  text-align: right;\n}\n.pokedex .pokemon-list > ul li span:last-child {\n  width: 12em;\n  text-transform: uppercase;\n}\n.pokedex .pokemon-list > ul li img {\n  width: 3em;\n  height: 3em;\n  -o-object-fit: contain;\n     object-fit: contain;\n  margin: 0 1em;\n  -ms-interpolation-mode: nearest-neighbor;\n      image-rendering: -moz-crisp-edges;\n      image-rendering: pixelated;\n}\n.pokedex .pokemon-list .pokemon-detail {\n  width: 50vh;\n  padding: 2em;\n}\n.pokedex .pokemon-list .pokemon-detail img {\n  width: 100%;\n  height: auto;\n  -o-object-fit: contain;\n     object-fit: contain;\n  -ms-interpolation-mode: nearest-neighbor;\n      image-rendering: -moz-crisp-edges;\n      image-rendering: pixelated;\n}\n.pokedex .pokemon-list .pokemon-detail h2 {\n  text-transform: uppercase;\n  font-size: 3em;\n}\n.pokedex .pokemon-list .pokemon-detail ul {\n  display: flex;\n  list-style: none;\n  margin: 0;\n  margin-bottom: 1em;\n  padding: 0;\n  text-transform: uppercase;\n}\n.pokedex .pokemon-list .pokemon-detail ul + p {\n  opacity: 0.5;\n}", ""]);
+exports.push([module.i, ".pokedex {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  background: tomato;\n  color: #FFF;\n}\n.pokedex .pokemon-list {\n  height: 75vh;\n  background: rgba(0, 0, 0, 0.5);\n}\n.pokedex .pokemon-list .row {\n  height: 100%;\n}\n.pokedex .pokemon-list .col {\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  overflow: hidden;\n}\n.pokedex .pokemon-list .col input {\n  background: transparent;\n  font: inherit;\n  color: #FFF;\n  border: 0;\n  border-bottom: 2px solid #FFF;\n  outline: none;\n  font-size: 1.5em;\n  padding: 0.5em 0;\n}\n.pokedex .pokemon-list .col input::-webkit-input-placeholder {\n  color: rgba(255, 255, 255, 0.5);\n}\n.pokedex .pokemon-list .col input:-ms-input-placeholder {\n  color: rgba(255, 255, 255, 0.5);\n}\n.pokedex .pokemon-list .col input::-ms-input-placeholder {\n  color: rgba(255, 255, 255, 0.5);\n}\n.pokedex .pokemon-list .col input::placeholder {\n  color: rgba(255, 255, 255, 0.5);\n}\n.pokedex .pokemon-list .list-wrap {\n  flex: 1 1 auto;\n  overflow-y: auto;\n}\n.pokedex .pokemon-list .list-wrap ul {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  border-radius: 4px;\n}\n.pokedex .pokemon-list .list-wrap ul li {\n  padding: 0;\n}\n.pokedex .pokemon-list .list-wrap ul li:hover {\n  background: rgba(0, 0, 0, 0.25);\n  cursor: pointer;\n}\n.pokedex .pokemon-list .list-wrap ul li:before {\n  width: 100%;\n  height: 1px;\n  background: rgba(255, 255, 255, 0.5);\n  content: \"\";\n  display: block;\n  margin-bottom: 0.25em;\n}\n.pokedex .pokemon-list .list-wrap ul li:first-child {\n  padding-top: 0.25em;\n}\n.pokedex .pokemon-list .list-wrap ul li:first-child:before {\n  content: none;\n}\n.pokedex .pokemon-list .list-wrap ul li div {\n  display: flex;\n  padding: 0.25em 0;\n  align-items: center;\n}\n.pokedex .pokemon-list .list-wrap ul li span:first-child {\n  width: 4em;\n  text-align: right;\n}\n.pokedex .pokemon-list .list-wrap ul li span:last-child {\n  width: 12em;\n  text-transform: uppercase;\n}\n.pokedex .pokemon-list .list-wrap ul li img {\n  width: 3em;\n  height: 3em;\n  -o-object-fit: contain;\n     object-fit: contain;\n  margin: 0 1em;\n  -ms-interpolation-mode: nearest-neighbor;\n      image-rendering: -moz-crisp-edges;\n      image-rendering: pixelated;\n}\n.pokedex .pokemon-list .pokemon-detail {\n  padding: 2em 0;\n}\n.pokedex .pokemon-list .pokemon-detail .generation {\n  position: absolute;\n  top: 0;\n  right: 0;\n  padding: 1em;\n  text-transform: uppercase;\n  font-family: \"Times New Roman\";\n}\n.pokedex .pokemon-list .pokemon-detail .generation span {\n  position: absolute;\n  right: 1em;\n  z-index: 1;\n}\n.pokedex .pokemon-list .pokemon-detail .generation:before {\n  content: \"\";\n  width: 8em;\n  height: 8em;\n  background: #000;\n  -webkit-transform: rotate(45deg);\n          transform: rotate(45deg);\n  position: absolute;\n  top: -200%;\n  right: -200%;\n  z-index: 0;\n}\n.pokedex .pokemon-list .pokemon-detail img {\n  width: 100%;\n  height: 300px;\n  -o-object-fit: contain;\n     object-fit: contain;\n  -ms-interpolation-mode: nearest-neighbor;\n      image-rendering: -moz-crisp-edges;\n      image-rendering: pixelated;\n}\n.pokedex .pokemon-list .pokemon-detail h2 {\n  text-transform: uppercase;\n  font-size: 3em;\n}\n.pokedex .pokemon-list .pokemon-detail ul {\n  display: flex;\n  list-style: none;\n  margin: 0;\n  margin-bottom: 1em;\n  padding: 0;\n  text-transform: uppercase;\n}\n.pokedex .pokemon-list .pokemon-detail ul + p {\n  opacity: 0.5;\n}", ""]);
 
 // exports
 
@@ -34200,6 +34360,26 @@ return jQuery;
 
 /***/ }),
 
+/***/ "./node_modules/lozad/dist/lozad.min.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lozad/dist/lozad.min.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*! lozad.js - v1.9.0 - 2019-02-09
+* https://github.com/ApoorvSaxena/lozad.js
+* Copyright (c) 2019 Apoorv Saxena; Licensed MIT */
+!function(t,e){ true?module.exports=e():undefined}(this,function(){"use strict";var g=Object.assign||function(t){for(var e=1;e<arguments.length;e++){var r=arguments[e];for(var o in r)Object.prototype.hasOwnProperty.call(r,o)&&(t[o]=r[o])}return t},n="undefined"!=typeof document&&document.documentMode,l={rootMargin:"0px",threshold:0,load:function(t){if("picture"===t.nodeName.toLowerCase()){var e=document.createElement("img");n&&t.getAttribute("data-iesrc")&&(e.src=t.getAttribute("data-iesrc")),t.getAttribute("data-alt")&&(e.alt=t.getAttribute("data-alt")),t.appendChild(e)}if("video"===t.nodeName.toLowerCase()&&!t.getAttribute("data-src")&&t.children){for(var r=t.children,o=void 0,a=0;a<=r.length-1;a++)(o=r[a].getAttribute("data-src"))&&(r[a].src=o);t.load()}t.getAttribute("data-src")&&(t.src=t.getAttribute("data-src")),t.getAttribute("data-srcset")&&t.setAttribute("srcset",t.getAttribute("data-srcset")),t.getAttribute("data-background-image")&&(t.style.backgroundImage="url('"+t.getAttribute("data-background-image")+"')"),t.getAttribute("data-toggle-class")&&t.classList.toggle(t.getAttribute("data-toggle-class"))},loaded:function(){}};
+/**
+   * Detect IE browser
+   * @const {boolean}
+   * @private
+   */function f(t){t.setAttribute("data-loaded",!0)}var b=function(t){return"true"===t.getAttribute("data-loaded")};return function(){var r,o,a=0<arguments.length&&void 0!==arguments[0]?arguments[0]:".lozad",t=1<arguments.length&&void 0!==arguments[1]?arguments[1]:{},e=g({},l,t),n=e.root,i=e.rootMargin,d=e.threshold,c=e.load,u=e.loaded,s=void 0;return window.IntersectionObserver&&(s=new IntersectionObserver((r=c,o=u,function(t,e){t.forEach(function(t){(0<t.intersectionRatio||t.isIntersecting)&&(e.unobserve(t.target),b(t.target)||(r(t.target),f(t.target),o(t.target)))})}),{root:n,rootMargin:i,threshold:d})),{observe:function(){for(var t=function(t){var e=1<arguments.length&&void 0!==arguments[1]?arguments[1]:document;return t instanceof Element?[t]:t instanceof NodeList?t:e.querySelectorAll(t)}(a,n),e=0;e<t.length;e++)b(t[e])||(s?s.observe(t[e]):(c(t[e]),f(t[e]),u(t[e])))},triggerLoad:function(t){b(t)||(c(t),f(t),u(t))},observer:s}}});
+
+
+/***/ }),
+
 /***/ "./node_modules/popper.js/dist/esm/popper.js":
 /*!***************************************************!*\
   !*** ./node_modules/popper.js/dist/esm/popper.js ***!
@@ -37271,6 +37451,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LazyImage.vue?vue&type=style&index=0&lang=scss&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LazyImage.vue?vue&type=style&index=0&lang=scss& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/sass-loader/lib/loader.js??ref--7-3!../../../node_modules/vue-loader/lib??vue-loader-options!./LazyImage.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LazyImage.vue?vue&type=style&index=0&lang=scss&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Navigation.vue?vue&type=style&index=0&lang=scss&":
 /*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Navigation.vue?vue&type=style&index=0&lang=scss& ***!
@@ -38008,6 +38218,34 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LazyImage.vue?vue&type=template&id=661f5cec&":
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LazyImage.vue?vue&type=template&id=661f5cec& ***!
+  \************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("img", {
+    staticClass: "image",
+    style: _vm.style,
+    attrs: { "data-src": _vm.lazySrc, "data-srcset": _vm.lazySrcset }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Navigation.vue?vue&type=template&id=d456e682&":
 /*!*************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Navigation.vue?vue&type=template&id=d456e682& ***!
@@ -38079,78 +38317,132 @@ var render = function() {
   return _c("div", { staticClass: "pokedex" }, [
     _c("h1", [_vm._v("Pokedex")]),
     _vm._v(" "),
-    _c("div", { staticClass: "pokemon-list" }, [
-      _c(
-        "ul",
-        _vm._l(_vm.pokemon, function(monster) {
-          return _c(
-            "li",
-            {
-              key: monster.pokemon_id,
-              on: {
-                click: function($event) {
-                  return _vm.setPokemonData(monster)
-                }
+    _c("div", { staticClass: "pokemon-list container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.pokedexSearch,
+                expression: "pokedexSearch"
               }
-            },
-            [
-              _c("div", [
-                _c("span", [_vm._v("#" + _vm._s(monster.pokemon_id))]),
-                _vm._v(" "),
-                _c("img", {
-                  attrs: {
-                    src:
-                      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
-                      monster.pokemon_id +
-                      ".png",
-                    alt: ""
-                  }
-                }),
-                _vm._v(" "),
-                _c("span", [_vm._v(_vm._s(monster.name))])
-              ])
-            ]
-          )
-        }),
-        0
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "pokemon-detail" }, [
-        _vm.pokemonData
-          ? _c("div", { key: _vm.pokemonData.id, staticClass: "info" }, [
-              _c("img", {
-                attrs: {
-                  src:
-                    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
-                    _vm.pokemonData.pokemon_id +
-                    ".png",
-                  alt: ""
+            ],
+            attrs: { type: "text", placeholder: "Search", autofocus: "" },
+            domProps: { value: _vm.pokedexSearch },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
                 }
+                _vm.pokedexSearch = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "list-wrap" }, [
+            _c(
+              "ul",
+              _vm._l(_vm.filteredPokemon, function(monster) {
+                return _c(
+                  "li",
+                  {
+                    key: monster.pokemon_id,
+                    on: {
+                      click: function($event) {
+                        return _vm.setPokemonData(monster)
+                      }
+                    }
+                  },
+                  [
+                    _c(
+                      "div",
+                      [
+                        _c("span", [_vm._v("#" + _vm._s(monster.pokemon_id))]),
+                        _vm._v(" "),
+                        _c("lazy-image", {
+                          attrs: {
+                            "lazy-src":
+                              "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
+                              monster.pokemon_id +
+                              ".png"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("span", [_vm._v(_vm._s(monster.name))])
+                      ],
+                      1
+                    )
+                  ]
+                )
               }),
-              _vm._v(" "),
-              _c("h2", [_vm._v(_vm._s(_vm.pokemonData.name))]),
-              _vm._v(" "),
-              _c(
-                "ul",
-                _vm._l(_vm.pokemonData.types, function(type) {
-                  return _c(
-                    "li",
-                    { key: type.id, class: "type type-" + type.name },
-                    [
-                      _vm._v(
-                        "\n\t\t\t\t\t\t" + _vm._s(type.name) + "\n\t\t\t\t\t"
-                      )
-                    ]
-                  )
-                }),
-                0
-              ),
-              _vm._v(" "),
-              _c("p", [_vm._v(_vm._s(_vm.pokemonData.genus))]),
-              _vm._v(" "),
-              _c("p", [_vm._v(_vm._s(_vm.pokemonData.flavor_text))])
-            ])
-          : _vm._e()
+              0
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col" }, [
+          _c("div", { staticClass: "pokemon-detail" }, [
+            _vm.pokemonData.id
+              ? _c(
+                  "div",
+                  { key: _vm.pokemonData.id, staticClass: "info" },
+                  [
+                    _vm.pokemonData.generation
+                      ? _c("div", { staticClass: "generation" }, [
+                          _c("span", [
+                            _vm._v(
+                              "\n\t\t\t\t\t\t\t\t" +
+                                _vm._s(
+                                  _vm.formatGeneration(
+                                    _vm.pokemonData.generation
+                                  )
+                                ) +
+                                "\n\t\t\t\t\t\t\t"
+                            )
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("lazy-image", {
+                      attrs: {
+                        "lazy-src":
+                          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
+                          _vm.pokemonData.pokemon_id +
+                          ".png"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("h2", [_vm._v(_vm._s(_vm.pokemonData.name))]),
+                    _vm._v(" "),
+                    _c(
+                      "ul",
+                      _vm._l(_vm.pokemonData.types, function(type) {
+                        return _c(
+                          "li",
+                          { key: type.id, class: "type type-" + type.name },
+                          [
+                            _vm._v(
+                              "\n\t\t\t\t\t\t\t\t" +
+                                _vm._s(type.name) +
+                                "\n\t\t\t\t\t\t\t"
+                            )
+                          ]
+                        )
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    _c("p", [_vm._v(_vm._s(_vm.pokemonData.genus))]),
+                    _vm._v(" "),
+                    _c("p", [_vm._v(_vm._s(_vm.pokemonData.flavor_text))])
+                  ],
+                  1
+                )
+              : _vm._e()
+          ])
+        ])
       ])
     ])
   ])
@@ -38185,13 +38477,12 @@ var render = function() {
           "div",
           { class: { "pokemon-clue": true, success: _vm.isGuessCorrect } },
           [
-            _c("img", {
+            _c("lazy-image", {
               attrs: {
-                src:
+                "lazy-src":
                   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
                   _vm.randomPokemon.pokemon_id +
-                  ".png",
-                alt: ""
+                  ".png"
               }
             }),
             _vm._v(" "),
@@ -38226,7 +38517,8 @@ var render = function() {
                   ])
                 : _vm._e()
             ])
-          ]
+          ],
+          1
         )
       : _vm._e(),
     _vm._v(" "),
@@ -38248,20 +38540,23 @@ var render = function() {
                       }
                     },
                     [
-                      _c("div", [
-                        _c("img", {
-                          attrs: {
-                            src:
-                              "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
-                              pokemon.pokemon_id +
-                              ".png",
-                            alt: ""
-                          }
-                        }),
-                        _vm._v(
-                          "\n\t\t\t\t\t" + _vm._s(pokemon.name) + "\n\t\t\t\t"
-                        )
-                      ])
+                      _c(
+                        "div",
+                        [
+                          _c("lazy-image", {
+                            attrs: {
+                              "lazy-src":
+                                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
+                                pokemon.pokemon_id +
+                                ".png"
+                            }
+                          }),
+                          _vm._v(
+                            "\n\t\t\t\t\t" + _vm._s(pokemon.name) + "\n\t\t\t\t"
+                          )
+                        ],
+                        1
+                      )
                     ]
                   )
                 }),
@@ -53199,6 +53494,7 @@ Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 
 
+Vue.component('lazy-image', __webpack_require__(/*! ./components/LazyImage.vue */ "./resources/js/components/LazyImage.vue")["default"]);
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   mode: 'history',
   routes: [{
@@ -53372,6 +53668,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_template_id_f2b6376c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_template_id_f2b6376c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/LazyImage.vue":
+/*!***********************************************!*\
+  !*** ./resources/js/components/LazyImage.vue ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _LazyImage_vue_vue_type_template_id_661f5cec___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LazyImage.vue?vue&type=template&id=661f5cec& */ "./resources/js/components/LazyImage.vue?vue&type=template&id=661f5cec&");
+/* harmony import */ var _LazyImage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LazyImage.vue?vue&type=script&lang=js& */ "./resources/js/components/LazyImage.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _LazyImage_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LazyImage.vue?vue&type=style&index=0&lang=scss& */ "./resources/js/components/LazyImage.vue?vue&type=style&index=0&lang=scss&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _LazyImage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _LazyImage_vue_vue_type_template_id_661f5cec___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _LazyImage_vue_vue_type_template_id_661f5cec___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/LazyImage.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/LazyImage.vue?vue&type=script&lang=js&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/LazyImage.vue?vue&type=script&lang=js& ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LazyImage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./LazyImage.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LazyImage.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LazyImage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/LazyImage.vue?vue&type=style&index=0&lang=scss&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/LazyImage.vue?vue&type=style&index=0&lang=scss& ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_LazyImage_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/sass-loader/lib/loader.js??ref--7-3!../../../node_modules/vue-loader/lib??vue-loader-options!./LazyImage.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LazyImage.vue?vue&type=style&index=0&lang=scss&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_LazyImage_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_LazyImage_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_LazyImage_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_LazyImage_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_lib_loader_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_LazyImage_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/LazyImage.vue?vue&type=template&id=661f5cec&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/LazyImage.vue?vue&type=template&id=661f5cec& ***!
+  \******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LazyImage_vue_vue_type_template_id_661f5cec___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./LazyImage.vue?vue&type=template&id=661f5cec& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LazyImage.vue?vue&type=template&id=661f5cec&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LazyImage_vue_vue_type_template_id_661f5cec___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LazyImage_vue_vue_type_template_id_661f5cec___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

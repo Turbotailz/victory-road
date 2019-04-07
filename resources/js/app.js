@@ -17,6 +17,8 @@ import Home from './components/Home';
 import Quiz from './components/Quiz';
 import Pokedex from './components/Pokedex';
 
+Vue.component('lazy-image', require('./components/LazyImage.vue').default);
+
 const router = new VueRouter({
     mode: 'history',
     routes: [

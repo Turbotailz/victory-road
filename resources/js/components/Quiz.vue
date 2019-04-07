@@ -3,7 +3,7 @@
 		<h1>Who's that Pokemon!?</h1>
 
 		<div v-if="randomPokemon" :class="{'pokemon-clue': true, 'success': isGuessCorrect}">
-			<img :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${randomPokemon.pokemon_id}.png`" alt="">
+			<lazy-image :lazy-src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${randomPokemon.pokemon_id}.png`" />
 
 			<div class="pokemon-info">
 				<div v-if="isGuessCorrect" class="pokemon-info-data">
@@ -19,11 +19,11 @@
 			</div>
 		</div>
 
-		<div  v-if="!isGuessCorrect" class="guess-input">
+		<div v-if="!isGuessCorrect" class="guess-input">
 			<ul v-if="guess && !isGuessCorrect" class="guess-list">
 				<li v-for="pokemon in guessList" @click="guess = pokemon.name" :key="pokemon.id">
 					<div>
-						<img :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.pokemon_id}.png`" alt="">
+						<lazy-image :lazy-src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.pokemon_id}.png`" />
 						{{pokemon.name}}
 					</div>
 				</li>
