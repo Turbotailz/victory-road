@@ -8,18 +8,22 @@ use App\Type;
 
 class PokemonController extends Controller
 {
+    // Return a list of all Pokemon
     function getAllPokemon() {
         return Pokemon::all();
     }
 
+    // Get a Pokemon and its data
     function getPokemon($id) {
         $pokemon = Pokemon::with(['evolvesFrom', 'evolvesTo'])->find($id);
 
+        // Check if we have cached data for the requested Pokemon
         if ($pokemon) {
-            // Check if we have cached data for the requested Pokemon
+            // If there is no "generation" stored, it is assumed we haven't queried this Pokemon before
             if ($pokemon->generation) {
                 return $pokemon;
             } else {
+                // Fetch the Pokemon data and save it to the database
                 $json = json_decode(file_get_contents('https://pokeapi.co/api/v2/pokemon-species/' . $pokemon->pokemon_id));
 
                 $pokemon->generation = $json->generation->name;
@@ -45,6 +49,7 @@ class PokemonController extends Controller
                     }
                 }
 
+                // Fire off another request to get the Pokemon's type data
                 $json = json_decode(file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $pokemon->pokemon_id));
 
                 $types = [];
@@ -58,6 +63,7 @@ class PokemonController extends Controller
 
                 $pokemon->save();
 
+                // Returning $pokemon here won't return the saved data - maybe I'm missing something here but this solution works instead
                 return Pokemon::with(['evolvesFrom', 'evolvesTo'])->find($id);
             }
         } else {
@@ -65,6 +71,7 @@ class PokemonController extends Controller
         }
     }
 
+    // Return a random Pokemon for the "Who's that Pokemon" quiz
     function getRandomPokemon() {
         $randomPokemonId = Pokemon::with(['evolvesFrom', 'evolvesTo'])->inRandomOrder()->first()->pokemon_id;
 

@@ -13,10 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::get('pokemon', 'PokemonController@getAllPokemon');
 Route::get('pokemon/{id}', 'PokemonController@getPokemon');
 Route::get('who', 'PokemonController@getRandomPokemon');

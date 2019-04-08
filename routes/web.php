@@ -11,6 +11,7 @@
 |
 */
 
+// Route all front end requests to Vue.js
 Route::get('/{any}', function () {
     return view('app');
 })->where('any', '.*');
